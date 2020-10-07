@@ -40,16 +40,16 @@ class Client {
     const target = url.parse(this.target, true)
     const mergedQuery = Object.assign(target.query, data.query)
     target.search = querystring.stringify(mergedQuery)
-
     delete data.query
 
     const req = superagent.post(url.format(target)).send(data.body)
-
+    const content_length = JSON.stringify(data.body).length;
     delete data.body
 
     Object.keys(data).forEach(key => {
       req.set(key, data[key])
     })
+    req.set('Content-Length', content_length.toString(10));
 
     req.end((err, res) => {
       if (err) {
