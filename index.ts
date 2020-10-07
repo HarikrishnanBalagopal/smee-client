@@ -36,6 +36,9 @@ class Client {
 
   onmessage (msg: any) {
     const data = JSON.parse(msg.data)
+    // The host header on the original request is set to smee.io.
+    // We are proxying the request so the host header should be our target, otherwise TLS can fail on the target.
+    delete data.host
 
     const target = url.parse(this.target, true)
     const mergedQuery = Object.assign(target.query, data.query)
